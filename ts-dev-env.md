@@ -16,11 +16,16 @@ with content
 ```
 {
     "compilerOptions": {
+        "target": "es2016",
+        "module": "commonjs",
+        "moduleDetection": "force",
         "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true,
         "esModuleInterop": true,
         "outDir": "./dist"
     },
-    include: [
+    "include": [
         "src",
         "__test__"
     ]
@@ -33,8 +38,8 @@ with content:
 ```
 {
     "extends": "./tsconfig.json",
-    "exclude": [
-        "./__test__"
+    "include": [
+        "src"
     ]
 }
 ```
