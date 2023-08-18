@@ -51,7 +51,7 @@ In `package.json`
     {
         "scripts": {
             "build": "tsc --build tsconfig-build.json",
-            "start": "node ./dist/app.js",
+            "start": "node ./dist/index.js",
         },
     }
 ```
