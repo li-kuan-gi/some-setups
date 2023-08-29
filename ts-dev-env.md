@@ -4,16 +4,16 @@ init proj
 
 necessary pkg
 ================
-    npm install -D typescript ts-node @types/node jest ts-jest @types/jest
+    npm install -D typescript ts-node @types/node jest ts-jest @types/jest tsc-alias
 
-build settings
+tsc settings
 ===================
 + create `tsconfig.json`
 ```
     npx tsc --init
 ```
 with content
-```
+```json
 {
     "compilerOptions": {
         "target": "es2016",
@@ -23,7 +23,9 @@ with content
         "forceConsistentCasingInFileNames": true,
         "skipLibCheck": true,
         "esModuleInterop": true,
-        "outDir": "./dist"
+        "outDir": "./dist",
+        "baseUrl": ".",
+        "paths": {}
     },
     "include": [
         "src",
@@ -35,7 +37,7 @@ with content
 + create `tsconfig-build.json`
 
 with content:
-```
+```json
 {
     "extends": "./tsconfig.json",
     "include": [
@@ -47,10 +49,10 @@ with content:
 + commands
 
 In `package.json`
-```
+```json
     {
         "scripts": {
-            "build": "tsc --build tsconfig-build.json",
+            "build": "tsc --project tsconfig-build.json && tsc-alias -p tsconfig-build.json",
             "start": "node ./dist/index.js",
         },
     }
@@ -59,7 +61,7 @@ In `package.json`
 test settings
 ===============
 + In `package.json`
-  ```
+  ```json
     {
         "scripts": {
             "test": "jest"
@@ -70,4 +72,19 @@ test settings
 + create `jest.config.js`
   ```
     npx ts-jest config:init
+  ```
+
++ In `jest.config.js`
+  ```js
+    const { pathsToModuleNameMapper } = require("ts-jest");
+    const { compilerOptions } = require("./tsconfig.json");
+
+    /** @type {import('ts-jest').JestConfigWithTsJest} */
+    module.exports = {
+        preset: 'ts-jest',
+        testEnvironment: 'node',
+        roots: ['.'],
+        modulePaths: [compilerOptions.baseUrl],
+        moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths)
+    };
   ```
